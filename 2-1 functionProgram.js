@@ -560,6 +560,49 @@ const editNameb = (oldName,name,arr)=>
 
 //省略 50P
 
+//以下のschoolsオブジェクトのキーと値を配列に格納する例
+
+const schoolsd = {
+  Yorktown:10,
+  "Washington & Liberty": 2,
+  Wakefield: 5
+};
+
+const schoolArray = Object.keys(schoolsd).map(key => ({
+  name:key,
+  wind:shoolsd[key]
+}));
+
+console.log(schoolArray);
+
+// [
+// {  
+//    name: "Yorktown",
+//    wins:10
+// },
+// {  
+//    name: "Washington & Liberty",
+//    wins:2
+// },
+// { 
+//    name: "Wakefield",
+//    wins: 5
+// }
+// ] 
+
+//schoolオブジェクトに、学校名キーと、対応する数字が入っている
+//schoolArrayを呼び出したときに、
+//Object.keys()は、指定されたオブジェクトのキーを配列にしてすべて返す。
+
+//.map() メソッドは、与えられた配列の各要素に対して同じ処理を行い、その結果を新しい配列として取得したい場合に便利です。
+
+
+
+
+
+
+
+
 
 //ここまでは、配列から別の配列への変換、オブジェクトから配列への変換を見てきた。
 
@@ -567,16 +610,275 @@ const editNameb = (oldName,name,arr)=>
 //Array.reduceもしくは、Array.reduceRight(末尾から走査して値を週尺)を使う。
 //単一の値とは、数値、文字列、真偽値といったプリミティブ値だけでなく、オブジェクトや関数といった参照値も含む。
 
+//配列の中から一番大きな数値を見つけるコード。
 
+const ages = [21,18,42,40,64,63,34];
+
+const maxAge = ages.reduce((max,age) =>{
+  console.log("${age} > ${max} = ${age > nax}");
+  if(age > max){
+    return age;
+  }else{
+    return nax;
+  }
+},0);
+
+console.log("maxAge",maxAge);
+
+// 21 > 0 = true
+// 18 > 21 = false
+// ...
+// maxAge 64
+
+//数値の配列agesが単一の数値64にreduce集約されていく
+//Array.reduceは２つの引数を取る。ひとつはコールバック関数で、もうひとつは初期値です。
+//上記の例ではコールバック関数の引数maxの初期値は０です。
+//コールバック関数は配列の要素ごとに呼び出され、配列の各要素が引数ageとして渡されます。
+//よって、初回の呼び出しは、(max:0,age:21)の引数で呼び出されます。
+//コールバック関数はmaxとageのうち数の大きい方を返します。
+//三項演算子を用いることで
+
+//const max = ages.reduce((max,value) =>(value > max ? value: max),0);
+
+//Array.reduceは配列をオブジェクトに変換するのにも使えます。
+
+const colorsb = [{
+  id:"xekare",
+  title:"red red",
+  rating:3
+},
+{
+  id:"prigbj",
+  title:"grizzly grey",
+  rating:5
+},
+{
+  id:"ryhbhsl",
+  title:"banana",
+  rating:1
+},
+];
+
+const hashColors = colors.reduce((hash,{ id, title , rating}) => {
+  hash[id] = {title,rating};
+  return hash;
+},{});
+
+//Array.reduceの初期値に空のオブジェクトを渡している。
+//最終的な成果物であるオブジェクトを初期化している。
+//第一引数はコールバック関数、
+//配列を単一のオブジェクトに集約する一般的なやり方
+
+//配列を異なる配列に
+
+const colors = ["red","red","green","blue","green"];
+
+const uniqueColors = colors.reduce(
+  (unique,color) =>
+    unique.indesOf(color) !== -1 ? unique : [...unique,color],
+    []
+    );
+
+console.log(uniqueColors);
+// forEach()：配列の個々の要素を個別に処理するメソッド
+// reduce()：配列の全ての要素を使って一つの結果を求めるメソッド
+
+
+
+//Array.mapとArray.redduceの用法、関数型プログラミングには不可欠のツール
+//モダンなJSにおいて多用される、あるデータ説とから別のデータセットを取得するスキル
+
+
+
+
+
+//3.3.4
 
 //高階関数を作る
+//他の関数を引数に取るか、戻り値として関数を返すか、それら両方を満たす関数
+//Array.map,Array.filter,Array.reduceは関数を引数にとるため、すべて高階関数。
 
-//再帰
+const incoleIf = (condition,fnTrue,fnFalse)=>
+    condition ? fnTrue():fnFalse();
+
+const showWelcome = () => console.log ("Welcome!!");
+
+const showUnauthorized = () => console.log("Unauthorized!!!");
+
+invokeIf(true,showWelcome,shoUnauthorized);//"Welcom"
+involeIf(false,showWelcom,shoUnauthorized);//"Unauthorized!!"
+
+//上記例では、involeIf は fnTrue fnFalse２つのコールバック関数を引数に取る
+//そして、引数counditionの値によって、いずれかのコールバック関数を呼び出す
+
+//一方で戻り値として関数を返す高階関数はどういった場面で使用するのでしょうか。
+//JS では非同期処理によりこーどが複雑になりがち。これを解消するために、使用される場合がある。
+
+//その場で、処理を実行せずに、関数として返却することで、処理の実行のタイミングを呼び出し元にゆだねることができます。
+//この目的で高階関数を使用する場合、カリー化curryingというテクニックが使用される。
+
+//以下が例。
+//関数userLogs はuserNameを引数に取りますが、その時点では必要な情報がすべてそろっていないため、
+//その場で処理を実行する代わりに関数を返却します。
+//呼び出し元は、いったん関数を受け取り、のちほど必要な情報messageが入手できた時点で、この関数を呼び出します
+
+const userLogs = userName => message =>
+  console.log('${userName} -> ${message}');
+
+const log = userLogs("grandpa23");
+
+log("atttempted to load 20 fale members");
+getFakeMembers(20).then(
+  members => log("successfuly loaded ${members.length} members")
+).catch(
+  error => log("encountered an error loading members")
+);
+
+//promiseが成功か失敗するたびにlog関数が呼び出される。すべてのコンソール出力の先頭に"grandpa23”という文字列が挿入される。
+
+
+
+
+
+
+
+//3.3.5 再帰
+
+//関数の中から自分自身を再帰的に呼び出すテクニック。
+//関数型プログラミングにおいて多用される。ループで書かれたコードは多くの場合、再帰を使って書き直すことができ、コードが簡潔になる
+
+const countdown = (value, fn) => { 
+  fn(value); 
+  return value > 0 ? countdown(value - 1, fn):value;
+};
+
+countdown(10,value => console.log(value));
+
+//上記の関数countdownは数値とコールバック関数を引数に取ります。
+//例では、この関数に１０とコンソール出力関数を渡して実行。
+//countdownでは、まずコールバック関数を呼び出し、数値が０より大きければデクリメントしたうえで、再帰的に自分自身を呼び出す。
+//最終的に数値が０になるまで再帰呼び出しのコールスタックが積み上げられる。
+//再帰は非同期処理と組み合わさったときに真価をは発揮する。
+//非同期処理の場合、再帰呼び出しは直ちに実行されず、たとえばデータが取得できた際に、
+//もしくはタイマーが発火した際に呼び出される。
+
+//以下はcountdownに引数delayを加えて非同期バージョンにしたもの
+
+const countdownA = (value,fun,delay = 1000) =>{
+  fn(value);
+  return value > 0
+    ? setTimeout(() => countdown (value - 1, fn ,delay),delay)
+    : value;
+};
+
+const log = value => console.log(value);
+countdown(10,log);
+
+//上記の例では数値が１秒おきにデクリメントされてコンソール出力される
+//同期バージョンとの違いは、非同期バージョンでは直ちに再帰呼び出しせずに、指定された時間まってから呼び出している点。
+
+//再帰はまた、データ構造の探索の用途にも使われる。
+//たとえばサブフォルダからファイルを探索する場合や、HTMLドキュメントからＤＯＭ要素を探索する場合に再帰のテクニックが使われる。
+//以下の例では、ネストしたオブジェクトから所望のプロパティの値を取得しています。
+
+const dan = {
+  type:"person",
+  data:{
+    gender:"male",
+    info:{
+      id:22,
+      fullname:{
+        first:"Dan",
+        last:"Deacon"
+      }
+    }
+  }
+};
+
+deepPick("type",dan);//"person"
+deepPick("data.info.fullname.first",dan);//"Dan"
+
+//ここでdeepPickは、ドット表記のプロパティ名とオブジェクトを受け取り、オブジェクトを探索して指定されたプロパティの値を返す関数
+
+const deepPick = (fields,object = {})=>{
+  const[first,...remaining] = fields.split(".");
+  return remaining,length
+  ? deepPick(remaining.join("."),object[first])
+  : object[first];
+};
+
+//deepPick関数は、まずプロパティ名をドット演算子.で分割し、先頭の要素と後続の要素に二分します。
+//後続の要素が存在しなければ、直ちに先頭の要素に呼応するプロパティの値を返します。
+//後続の要素が存在する場合は、自信を再帰呼び出しすることで、オブジェクトの一段深いレベルに潜る
+//そしてプロパティ名がドット演算子を含まなくなるまで、再帰呼び出しが繰り返される。
+
+
+//以下のように、呼び出しのたびに、firstとremainingの値をコンソールに出力すると再帰の呼び出しの仕組みがよくわかる。
+
+
+
+//3.3.6 関数の合成
+//関数型プログラミングでは、通常、ロジックは細分化され、一つの関数はひとつのタスクのみを受け持つ。
+//最終的に、それらの小さな関数を組み合わせてアプリのロジックを記述する。。
+//関数を順番に、もしくは並行に呼び出してり、いくつかの関数呼び出しを束ねてより大きな関数を作ることで、アプリの全体を構築する過程を関数の合成と呼ぶ、
+//関数の合成にもさまざまなパターンやテクニックがある。
+//ひとつは連鎖cahiningです。ＪＳでドット演算子を使って連鎖的に関数呼び出しを行うコード。
+
+//replaceメソッドを用いて連鎖の例を実装してみる。
+//replaceメソッドも文字列を返すので、戻り値に対して、さらにreplaceを呼び出すことができる。
+
+const template = "hh:mm:ss:tt";
+const clockTime = template
+  .replace("hh","03")
+  .replace("mm","33")
+  .replace("ss","33")
+  .replace("tt","PM")
+
+console.log(clockTime);
+
+//"03:33:33 PM"
+
+//文字列templateを変換している。含まれる記号を、時分秒に次々に変換することで、具体的な時刻の文字列clockTimeを取得している。元の文字列は変更されないため、あとから別の時刻を得るのに再利用できる。
+
+
+//他の合成の例。以下のboth関数では２つの関数呼び出しが含まれており、civilianHoursの出力がappendAMPMの入力として利用されている。
+
+const both = date => appendAMPM(civilianHours(data));
+
+//しかし上記のやり方ではスケール市内、２０個の関数を合成する場面ではコードが読みにくい。
+//よりエレガントなアプローチは、以下のように高階関数を使って関数を合成すること。
+
+const bothB = compose(
+  civilianHors,
+  appendAMPM
+);
+
+bothB(new Date());
+
+//たとえ合成する関数の数が増えたとしても、このやり方ならスケールする。
+//たとえば、関数の順番を入れ替える場合、どこを変更すべきか一目瞭然
+
+//compose関数は高階関数で、複数の関数を引数にとり、単一の値にreduceする。
+
+const compose = (...fns) => arg =>
+  fns.reduce((composed, f) => f(composed),arg);
+
+
+  //compose関数は任意の数の関数を引数に取る。
+  //引数はスプレッド構文で記述され、fnsという !!!配列!!!  として渡される。
+  //compose関数は戻り値として関数を返し、この関数は単一の引数argを取る。
+  //戻り値の関数を呼び出すことで、Array.reduceが呼び出され、配列fnsに格納された関数が順番に呼び出される。
+
+  //Array.reduceの第一引数はコールバック関数で、第二引数はコールバック関数の最初の呼び出し時に渡される初期値。
+  //つまり配列内の最初の関数は引数argで呼び出され、それ以降は前の関数の戻り値が次の関数の引数として渡される。
+  //そのようにして、配列内の関数は順に呼び出され、最後の関数の戻り値が最終的に戻り値として返される。
+
+
+
+
+
 
 //関数の合成
-
-//アプリケーションの構築。
-
 
 
 

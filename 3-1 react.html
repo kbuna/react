@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>React Elements</title>
+</head>
+<body>
+
+<!-- Target Container -->
+<div id="root"></div>
+
+<!-- React Library & React DOM-->
+<script>
+
+    const items =[
+        "1 cup unsalted butter",
+        "1 cup crunchy",
+        "1 cup brown",
+        "1 cup white",
+        "2 eggs",
+        "2.5 cup",
+        "1 teaspoon",
+        "0,5 teaspoon"
+    ];
+
+
+    function IngredientsList({items}){
+        return React.createElement(
+            "ul",
+            {className:"ingredients"},
+            items.map((ingredient,i) =>
+                React.createElement("li",{key: i}, ingredient)
+            )
+        );
+    }
+
+    ReactDOM.render(
+        React.createElement(IngredientsList,{items},null),
+        document.getElementById("root")
+    );
+
+</script>
+
+</body>
+</html>
